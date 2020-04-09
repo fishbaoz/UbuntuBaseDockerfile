@@ -16,8 +16,11 @@
 
 FROM ubuntu:18.04
 
-RUN apt-get update && \
-    apt-get install -y \
+ENV TZ='Asia/Shanghai'
+
+RUN while true ; do apt-get update && break ; done
+RUN while true ; do \
+     DEBIAN_FRONTEND=noninteractive apt-get install -y \
         gawk \
         wget \
         git-core \
@@ -41,8 +44,14 @@ RUN apt-get update && \
         iputils-ping \
         iproute2 \
         fluxbox \
-        tightvncserver && \
-    cp -af /etc/skel/ /etc/vncskel/ && \
+        vim \
+        emacs-nox \
+        magit \
+        lftp \
+        curl \
+        tzdata \
+        tightvncserver && break ; done
+RUN cp -af /etc/skel/ /etc/vncskel/ && \
     echo "export DISPLAY=1" >>/etc/vncskel/.bashrc && \
     mkdir  /etc/vncskel/.vnc && \
     echo "" | vncpasswd -f > /etc/vncskel/.vnc/passwd && \
@@ -57,4 +66,5 @@ RUN  bash /build-install-dumb-init.sh && \
 
 USER yoctouser
 WORKDIR /home/yoctouser
+RUN echo "set nocompatible" > /home/yoctouser/.vimrc
 CMD /bin/bash

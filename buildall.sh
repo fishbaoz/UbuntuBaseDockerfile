@@ -86,11 +86,12 @@ cd $SCRIPTDIR
 
 if [ "x" = "x$REPO" ]; then
     # Create a uid for the repo so we don't overwrite any user images
-    REPO=$(uuidgen)-yocto-docker-test
+    REPO=obmc20191006-yocto-docker-test
 fi
 
 build_cont=`readlink -f ./build_container.sh`
 
 DIRS=$(readlink -f $(dirname $(dirname $(find -path '*base/Dockerfile'))))
+echo $DIRS
 build_images "$DIRS"
 waitforimages
